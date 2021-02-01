@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Button from "../Button";
 import NumberDisplay from "../NumberDispaly";
-import { generateCells } from "../../utils";
-import { Cell, CellState, Face } from "../../types";
+import { generateCells, openMultipleCells } from "../../utils";
+import { Cell, CellState, CellValue, Face } from "../../types";
 import "./App.scss";
 
 const App: React.FC = () => {
@@ -41,8 +41,27 @@ const App: React.FC = () => {
   }, [live, time]);
 
   const handleCellClick = (rowParam: number, colParam: number) => (): void => {
+    //  ------Starting the Game------
     if (!live) {
+      //TODO: make it so you do not click on a bomb on the first click
       setLive(true);
+    }
+
+    const currentCell = cells[rowParam][colParam];
+    let newCells = cells.slice();
+
+    if ([CellState.Flagged, CellState.Visible].includes(currentCell.state)) {
+      return;
+    }
+    //  ------Clicking on a Bomb------
+    if (currentCell.value === CellValue.Bomb) {
+      // TODO they clicked on a bomb
+    } else if (currentCell.value === CellValue.None) {
+      newCells = openMultipleCells(newCells, rowParam, colParam);
+      setCells(newCells);
+    } else {
+      newCells[rowParam][colParam].state = CellState.Visible;
+      setCells(newCells);
     }
   };
 
