@@ -151,6 +151,7 @@ export const openMultipleCells = (
   colParam: number
 ): Cell[][] => {
   const currentCell = cells[rowParam][colParam];
+  console.log(rowParam, colParam);
 
   if (
     currentCell.state === CellState.Visible ||
@@ -216,9 +217,9 @@ export const openMultipleCells = (
     rightCell.value !== CellValue.Bomb
   ) {
     if (rightCell.value === CellValue.None) {
-      newCells = openMultipleCells(newCells, rowParam, colParam - 1);
+      newCells = openMultipleCells(newCells, rowParam, colParam + 1);
     } else {
-      newCells[rowParam][colParam - 1].state = CellState.Visible;
+      newCells[rowParam][colParam + 1].state = CellState.Visible;
     }
   }
 
