@@ -151,7 +151,6 @@ export const openMultipleCells = (
   colParam: number
 ): Cell[][] => {
   const currentCell = cells[rowParam][colParam];
-  console.log(rowParam, colParam);
 
   if (
     currentCell.state === CellState.Visible ||

@@ -7,7 +7,7 @@ interface ButtonProps {
   col: number;
   state: CellState;
   value: CellValue;
-  red?: boolean; 
+  red?: boolean;
   onClick(rowParam: number, colParam: number): (...args: any[]) => void;
   onContext(rowParam: number, colParam: number): (...args: any[]) => void;
 }

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactEventHandler } from "react";
 import Button from "../Button";
 import NumberDisplay from "../NumberDispaly";
+import DifficultySettings from "../DifficultySettings";
 import { generateCells, openMultipleCells } from "../../utils";
 import { Cell, CellState, CellValue, Face } from "../../types";
-import { MAX_ROWS, MAX_COLS } from "../../constants";
+import { MAX_ROWS, MAX_COLS, NO_OF_BOMBS } from "../../constants";
 import "./App.scss";
 
 const App: React.FC = () => {
@@ -11,13 +12,16 @@ const App: React.FC = () => {
   const [face, setFace] = useState<Face>(Face.Smile);
   const [time, setTime] = useState<number>(0);
   const [live, setLive] = useState<boolean>(false);
-  const [bombCounter, setBombCounter] = useState<number>(10);
+  const [bombCounter, setBombCounter] = useState<number>(NO_OF_BOMBS);
   const [hasLost, setHasLost] = useState<boolean>(false);
   const [hasWon, setHasWon] = useState(false);
 
   useEffect(() => {
-    const handleMouseDown = (): void => {
-      setFace(Face.Oh);
+    const handleMouseDown = (e: any): void => {
+      const { className } = e.target;
+      if (className.includes("Button") && !className.includes("visible")) {
+        setFace(Face.Oh);
+      }
     };
 
     const handleMouseUp = (): void => {
@@ -130,6 +134,7 @@ const App: React.FC = () => {
     setCells(newCells);
   };
 
+  // ------Right Clicking and Placing Flags------
   const handleCellContext = (rowParam: number, colParam: number) => (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ): void => {
@@ -158,7 +163,7 @@ const App: React.FC = () => {
   const handleFaceClick = (): void => {
     setLive(false);
     setTime(0);
-    setBombCounter(10);
+    setBombCounter(NO_OF_BOMBS);
     setCells(generateCells());
     setHasLost(false);
     setHasWon(false);
@@ -197,17 +202,29 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="App">
-      <div className="Header">
-        <NumberDisplay value={bombCounter} />
-        <div className="Face" onClick={handleFaceClick}>
-          <span role="img" aria-label="face">
-            {face}
-          </span>
+    <div>
+      <DifficultySettings />
+      <div className="App">
+        <div className="Header">
+          <NumberDisplay value={bombCounter} />
+          <div className="Face" onClick={handleFaceClick}>
+            <span role="img" aria-label="face">
+              {face}
+            </span>
+          </div>
+          <NumberDisplay value={time} />
         </div>
-        <NumberDisplay value={time} />
+        <div
+          className="Body"
+          // style={{
+          //   display: "grid",
+          //   gridTemplateColumns: repeat(19, 1fr),
+          //   gridTemplateRows: repeat(19, 1fr),
+          // }}
+        >
+          {renderCells()}
+        </div>
       </div>
-      <div className="Body">{renderCells()}</div>
     </div>
   );
 };
