@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactEventHandler } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../Button";
 import NumberDisplay from "../NumberDispaly";
 import DifficultySettings from "../DifficultySettings";
@@ -63,14 +63,18 @@ const App: React.FC = () => {
 
   const handleCellClick = (rowParam: number, colParam: number) => (): void => {
     let newCells = cells.slice();
-
+    console.log(newCells[rowParam][colParam]);
     //  ------Starting the Game------
     if (!live) {
-      if (newCells[rowParam][colParam].value === CellValue.Bomb) {
+      if (
+        newCells[rowParam][colParam].value === CellValue.Bomb ||
+        newCells[rowParam][colParam].value !== CellValue.None
+      ) {
         let isABomb = true;
         while (isABomb) {
+          console.log(isABomb);
           newCells = generateCells();
-          if (newCells[rowParam][colParam].value !== CellValue.Bomb) {
+          if (newCells[rowParam][colParam].value === CellValue.None) {
             isABomb = false;
             break;
           }
