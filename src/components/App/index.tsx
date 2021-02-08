@@ -11,10 +11,32 @@ const App: React.FC = () => {
   const [cells, setCells] = useState<Cell[][]>(generateCells());
   const [face, setFace] = useState<Face>(Face.Smile);
   const [time, setTime] = useState<number>(0);
+  const [firstClick, setFirstClick] = useState<boolean>(true);
   const [live, setLive] = useState<boolean>(false);
   const [bombCounter, setBombCounter] = useState<number>(NO_OF_BOMBS);
   const [hasLost, setHasLost] = useState<boolean>(false);
   const [hasWon, setHasWon] = useState(false);
+  const [difficulty, setDifficulty] = useState("easy");
+  const [totalRows, setTotalRows] = useState(19);
+  const [totalColumns, setTotalColumns] = useState(19);
+  const [totalBombs, setTotalBombs] = useState(70)
+
+//  ------ In this file ------
+  //Make a variable that holds the value of the current difficulty **
+  // Make a variable that holds the number of rows
+  // Make a variable that holds the number of columns
+  // Make a variable that holds the number of bombs
+  // Replace the constants that are imported with the matching state that was created throughout the document
+  // !!!!!!!! pass additional arguments to the functions inside of the utils file in order to remove the dependency on the old constants !!!!!!!!!!!!!!!!
+  // Pass the difficulty and setDifficulty to the DifficultySetting component as props
+  // Inside of a useEffect, that waits for changes in difficulty, create the logic to set the # of rows,cols, and bombs based on difficulty
+  // Inside of a useEffect, that waits for changes in # of rows, cols, and bombs, create the logic to produces and sets the required style variable
+
+//  ------ In Difficulty Settings ------
+  //inside of the DifficultySetting component create settings for easy medium hard expert and custom (checkboxes)
+  // when custom setting is selected open three inputs for the user to enter # of cols, rows, & bombs
+  // do not allow for the number of bombs to be greater than 80% of total tiles (cols*rows*.8)
+  // if total bombs > than allowed tell the user "The max amount of bombs is " + cols*rows*.8
 
   useEffect(() => {
     const handleMouseDown = (e: any): void => {
@@ -56,7 +78,6 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (hasWon) {
-      setLive(false);
       setFace(Face.Won);
     }
   }, [hasWon]);
@@ -64,47 +85,52 @@ const App: React.FC = () => {
   const handleCellClick = (rowParam: number, colParam: number) => (): void => {
     let newCells = cells.slice();
     console.log(newCells[rowParam][colParam]);
-    //  ------Starting the Game------
+    //  ------Starting the Game on Click if there No Time & Always Open Multiple Cells on First Click------
+    // !!!!!!!!!!! NOT WORKING AS EXPECTED !!!!!!!!!!!!!!!!!!
     if (!live) {
+      setFirstClick(false);
       if (
         newCells[rowParam][colParam].value === CellValue.Bomb ||
         newCells[rowParam][colParam].value !== CellValue.None
       ) {
-        let isABomb = true;
-        while (isABomb) {
-          console.log(isABomb);
+        let badStart = true;
+        while (badStart) {
+          console.log(badStart);
           newCells = generateCells();
           if (newCells[rowParam][colParam].value === CellValue.None) {
-            isABomb = false;
+            badStart = false;
             break;
           }
         }
       }
       setLive(true);
     }
-
+    if (!firstClick) {
+    }
     const currentCell = newCells[rowParam][colParam];
 
+    //  ------If the Cell is Flagged or Visible Do Nothing------
     if ([CellState.Flagged, CellState.Visible].includes(currentCell.state)) {
       return;
     }
 
-    //  ------Clicking on a Bomb tile------
+    //  ------Clicking on a Bomb Tile------
     if (currentCell.value === CellValue.Bomb) {
       setHasLost(true);
       newCells[rowParam][colParam].red = true;
       newCells = showAllBombs();
       setCells(newCells);
       return;
-      //  ------Clicking on a tile that is empty------
+      //  ------Clicking on a Tile that is Empty------
     } else if (currentCell.value === CellValue.None) {
       newCells = openMultipleCells(newCells, rowParam, colParam);
-      //  ------Clicking on a tile that has a number------
+      //  ------Clicking on a Tile that has a Number------
     } else {
       newCells[rowParam][colParam].state = CellState.Visible;
       setCells(newCells);
     }
 
+    //  ------Check if the Win Conditions Exist------
     let safeOpenCellsExist = false;
     for (let row = 0; row < MAX_ROWS; row++) {
       for (let col = 0; col < MAX_COLS; col++) {
@@ -220,11 +246,11 @@ const App: React.FC = () => {
         </div>
         <div
           className="Body"
-          // style={{
-          //   display: "grid",
-          //   gridTemplateColumns: repeat(19, 1fr),
-          //   gridTemplateRows: repeat(19, 1fr),
-          // }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: `${variable}`,
+            gridTemplateRows: "1fr",
+          }}
         >
           {renderCells()}
         </div>
