@@ -1,27 +1,24 @@
 import React from "react";
 import "./DifficultySetting.scss";
-// import { CellState, CellValue } from "../../types";
-
 interface DifficultySettingsProps {
-  //   row: number;
-  //   col: number;
-  //   red?: boolean;
-  //   onClick(rowParam: number, colParam: number): (...args: any[]) => void;
-  //   onContext(rowParam: number, colParam: number): (...args: any[]) => void;
+  difficulty: string;
+  setDifficulty(difficulty: string): any;
 }
 
-const DifficultySettings: React.FC<DifficultySettingsProps> = (
-  {
-    //   row,
-    //   col,
-    //   state,
-    //   value,
-    //   red,
-    //   onClick,
-    //   onContext,
-  }
-) => {
-  return <div className={`DifficultySettings`}>Easy Medium Hard</div>;
+const DifficultySettings: React.FC<DifficultySettingsProps> = ({
+  difficulty,
+  setDifficulty,
+}) => {
+  const difficultyLevels = ["easy", "intermediate", "hard", "expert"];
+  return (
+    <div className={`DifficultySettings`}>
+      {difficultyLevels.map((item) => (
+        <button key={item} onClick={() => setDifficulty(item)}>
+          {item}
+        </button>
+      ))}
+    </div>
+  );
 };
 
 export default DifficultySettings;

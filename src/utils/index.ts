@@ -1,4 +1,3 @@
-// import { numberOfColumns, numberOfRows, NO_OF_BOMBS } from "../constants";
 import { Cell, CellState, CellValue } from "../types";
 
 const grabAllAdjacentCells = (

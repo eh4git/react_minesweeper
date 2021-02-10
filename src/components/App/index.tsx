@@ -7,10 +7,10 @@ import { Cell, CellState, CellValue, Face } from "../../types";
 import "./App.scss";
 
 const App: React.FC = () => {
-  const [totalRows, setTotalRows] = useState(19);
-  const [totalColumns, setTotalColumns] = useState(19);
-  const [totalBombs, setTotalBombs] = useState(70);
-  const [difficulty, setDifficulty] = useState("easy");
+  const [totalRows, setTotalRows] = useState(18);
+  const [totalColumns, setTotalColumns] = useState(24);
+  const [totalBombs, setTotalBombs] = useState(65);
+  const [difficulty, setDifficulty] = useState("hard");
   const [face, setFace] = useState<Face>(Face.Smile);
   const [time, setTime] = useState<number>(0);
   const [firstClick, setFirstClick] = useState<boolean>(true);
@@ -27,10 +27,9 @@ const App: React.FC = () => {
   // Make a variable that holds the number of rows **
   // Make a variable that holds the number of columns **
   // Make a variable that holds the number of bombs **
-  // Replace the constants that are imported with the matching state that was created throughout the document
-  // !!!!!!!! pass additional arguments to the functions inside of the utils file in order to remove the dependency on the old constants !!!!!!!!!!!!!!!!
-  // Pass the difficulty and setDifficulty to the DifficultySetting component as props
-  // Inside of a useEffect, that waits for changes in difficulty, create the logic to set the # of rows,cols, and bombs based on difficulty
+  // Replace the constants that are imported with the matching state that was created throughout the document **
+  // Pass the difficulty and setDifficulty to the DifficultySetting component as props **
+  // Inside of a useEffect, that waits for changes in difficulty, create the logic to set the # of rows,cols, and bombs based on difficulty **
   // Inside of a useEffect, that waits for changes in # of rows, cols, and bombs, create the logic to produces and sets the required style variable
 
   //  ------ In Difficulty Settings ------
@@ -38,6 +37,31 @@ const App: React.FC = () => {
   // when custom setting is selected open three inputs for the user to enter # of cols, rows, & bombs
   // do not allow for the number of bombs to be greater than 80% of total tiles (cols*rows*.8)
   // if total bombs > than allowed tell the user "The max amount of bombs is " + cols*rows*.8
+
+  useEffect(() => {
+    switch (difficulty) {
+      case "easy":
+        setTotalRows(9);
+        setTotalColumns(9);
+        setTotalBombs(10);
+        break;
+      case "intermediate":
+        setTotalRows(14);
+        setTotalColumns(16);
+        setTotalBombs(40);
+        break;
+      case "hard":
+        setTotalRows(18);
+        setTotalColumns(24);
+        setTotalBombs(65);
+        break;
+      case "expert":
+        setTotalRows(16);
+        setTotalColumns(30);
+        setTotalBombs(99);
+        break;
+    }
+  }, [difficulty]);
 
   useEffect(() => {
     const handleMouseDown = (e: any): void => {
@@ -80,6 +104,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (hasWon) {
       setFace(Face.Won);
+      setLive(false);
     }
   }, [hasWon]);
 
@@ -91,7 +116,6 @@ const App: React.FC = () => {
     numberOfBombs: number
   ) => (): void => {
     let newCells = cells.slice();
-    console.log(newCells[rowParam][colParam]);
     //  ------Starting the Game on Click if there No Time & Always Open Multiple Cells on First Click------
     // !!!!!!!!!!! NOT WORKING AS EXPECTED !!!!!!!!!!!!!!!!!!
     if (!live) {
@@ -102,7 +126,6 @@ const App: React.FC = () => {
       ) {
         let badStart = true;
         while (badStart) {
-          console.log(badStart);
           newCells = generateCells(
             numberOfRows,
             numberOfColumns,
@@ -266,7 +289,10 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <DifficultySettings />
+      <DifficultySettings
+        difficulty={difficulty}
+        setDifficulty={setDifficulty}
+      />
       <div className="App">
         <div className="Header">
           <NumberDisplay value={bombCounter} />
