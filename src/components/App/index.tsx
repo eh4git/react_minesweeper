@@ -13,7 +13,6 @@ const App: React.FC = () => {
   const [difficulty, setDifficulty] = useState("hard");
   const [face, setFace] = useState<Face>(Face.Smile);
   const [time, setTime] = useState<number>(0);
-  const [firstClick, setFirstClick] = useState<boolean>(true);
   const [live, setLive] = useState<boolean>(false);
   const [bombCounter, setBombCounter] = useState<number>(totalBombs);
   const [hasLost, setHasLost] = useState<boolean>(false);
@@ -30,7 +29,7 @@ const App: React.FC = () => {
   // Replace the constants that are imported with the matching state that was created throughout the document **
   // Pass the difficulty and setDifficulty to the DifficultySetting component as props **
   // Inside of a useEffect, that waits for changes in difficulty, create the logic to set the # of rows,cols, and bombs based on difficulty **
-  // Inside of a useEffect, that waits for changes in # of rows, cols, and bombs, create the logic to produces and sets the required style variable
+  // Inside of a useEffect, that waits for changes in # of rows, cols, and bombs, create the logic to produces and sets the required style variable !!! Could not get to work, had to set a className with the difficulty setting
 
   //  ------ In Difficulty Settings ------
   //inside of the DifficultySetting component create settings for easy medium hard expert and custom (checkboxes)
@@ -60,18 +59,33 @@ const App: React.FC = () => {
         setTotalColumns(30);
         setTotalBombs(99);
         break;
+      default:
+        alert("incorrect difficulty value");
+        break;
     }
   }, [difficulty]);
 
   useEffect(() => {
+    setCells(generateCells(totalRows, totalColumns, totalBombs));
+    setBombCounter(totalBombs);
+    setLive(false);
+    setTime(0);
+    setHasWon(false);
+    setHasLost(false);
+  }, [totalRows, totalColumns, totalBombs]);
+
+  useEffect(() => {
     const handleMouseDown = (e: any): void => {
       const { className } = e.target;
+      console.log(hasLost);
+      if (hasWon || hasLost) return;
       if (className.includes("Button") && !className.includes("visible")) {
         setFace(Face.Oh);
       }
     };
 
     const handleMouseUp = (): void => {
+      if (hasWon || hasLost) return;
       setFace(Face.Smile);
     };
 
@@ -95,9 +109,12 @@ const App: React.FC = () => {
   }, [live, time]);
 
   useEffect(() => {
+    console.log(hasLost);
     if (hasLost) {
       setFace(Face.Lost);
       setLive(false);
+    } else {
+      setFace(Face.Smile);
     }
   }, [hasLost]);
 
@@ -105,6 +122,8 @@ const App: React.FC = () => {
     if (hasWon) {
       setFace(Face.Won);
       setLive(false);
+    } else {
+      setFace(Face.Smile);
     }
   }, [hasWon]);
 
@@ -116,10 +135,9 @@ const App: React.FC = () => {
     numberOfBombs: number
   ) => (): void => {
     let newCells = cells.slice();
-    //  ------Starting the Game on Click if there No Time & Always Open Multiple Cells on First Click------
-    // !!!!!!!!!!! NOT WORKING AS EXPECTED !!!!!!!!!!!!!!!!!!
+    //  ------Starting the Game on Click & Always Open Multiple Cells on First Click------
+    if (hasLost || hasWon) return;
     if (!live) {
-      setFirstClick(false);
       if (
         newCells[rowParam][colParam].value === CellValue.Bomb ||
         newCells[rowParam][colParam].value !== CellValue.None
@@ -138,8 +156,6 @@ const App: React.FC = () => {
         }
       }
       setLive(true);
-    }
-    if (!firstClick) {
     }
     const currentCell = newCells[rowParam][colParam];
 
@@ -200,7 +216,6 @@ const App: React.FC = () => {
       );
       setHasWon(true);
     }
-
     setCells(newCells);
   };
 
@@ -307,11 +322,11 @@ const App: React.FC = () => {
           <NumberDisplay value={time} />
         </div>
         <div
-          className="Body"
+          className={`Body ${difficulty}`}
           // style={{
           //   display: "grid",
-          //   gridTemplateColumns: `1fr`,
-          //   gridTemplateRows: "1fr",
+          //   gridTemplateColumns: `${gridColsStyle}`,
+          //   gridTemplateRows: `${gridRowsStyle}`,
           // }}
         >
           {renderCells(totalRows, totalColumns, totalBombs)}
