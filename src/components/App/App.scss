@@ -19,8 +19,8 @@
     @include borders(#7b7b7b, white);
     margin-top: 16px;
     display: grid;
-    // grid-template-rows: repeat(19, 1fr);
-    // grid-template-columns: repeat(19, 1fr);
+    grid-template-rows: repeat(19, 1fr);
+    grid-template-columns: repeat(19, 1fr);
 }
 
 .Face {

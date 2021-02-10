@@ -4,35 +4,36 @@ import NumberDisplay from "../NumberDispaly";
 import DifficultySettings from "../DifficultySettings";
 import { generateCells, openMultipleCells } from "../../utils";
 import { Cell, CellState, CellValue, Face } from "../../types";
-import { MAX_ROWS, MAX_COLS, NO_OF_BOMBS } from "../../constants";
 import "./App.scss";
 
 const App: React.FC = () => {
-  const [cells, setCells] = useState<Cell[][]>(generateCells());
+  const [totalRows, setTotalRows] = useState(19);
+  const [totalColumns, setTotalColumns] = useState(19);
+  const [totalBombs, setTotalBombs] = useState(70);
+  const [difficulty, setDifficulty] = useState("easy");
   const [face, setFace] = useState<Face>(Face.Smile);
   const [time, setTime] = useState<number>(0);
   const [firstClick, setFirstClick] = useState<boolean>(true);
   const [live, setLive] = useState<boolean>(false);
-  const [bombCounter, setBombCounter] = useState<number>(NO_OF_BOMBS);
+  const [bombCounter, setBombCounter] = useState<number>(totalBombs);
   const [hasLost, setHasLost] = useState<boolean>(false);
   const [hasWon, setHasWon] = useState(false);
-  const [difficulty, setDifficulty] = useState("easy");
-  const [totalRows, setTotalRows] = useState(19);
-  const [totalColumns, setTotalColumns] = useState(19);
-  const [totalBombs, setTotalBombs] = useState(70)
+  const [cells, setCells] = useState<Cell[][]>(
+    generateCells(totalRows, totalColumns, totalBombs)
+  );
 
-//  ------ In this file ------
+  //  ------ In this file ------
   //Make a variable that holds the value of the current difficulty **
-  // Make a variable that holds the number of rows
-  // Make a variable that holds the number of columns
-  // Make a variable that holds the number of bombs
+  // Make a variable that holds the number of rows **
+  // Make a variable that holds the number of columns **
+  // Make a variable that holds the number of bombs **
   // Replace the constants that are imported with the matching state that was created throughout the document
   // !!!!!!!! pass additional arguments to the functions inside of the utils file in order to remove the dependency on the old constants !!!!!!!!!!!!!!!!
   // Pass the difficulty and setDifficulty to the DifficultySetting component as props
   // Inside of a useEffect, that waits for changes in difficulty, create the logic to set the # of rows,cols, and bombs based on difficulty
   // Inside of a useEffect, that waits for changes in # of rows, cols, and bombs, create the logic to produces and sets the required style variable
 
-//  ------ In Difficulty Settings ------
+  //  ------ In Difficulty Settings ------
   //inside of the DifficultySetting component create settings for easy medium hard expert and custom (checkboxes)
   // when custom setting is selected open three inputs for the user to enter # of cols, rows, & bombs
   // do not allow for the number of bombs to be greater than 80% of total tiles (cols*rows*.8)
@@ -82,7 +83,13 @@ const App: React.FC = () => {
     }
   }, [hasWon]);
 
-  const handleCellClick = (rowParam: number, colParam: number) => (): void => {
+  const handleCellClick = (
+    rowParam: number,
+    colParam: number,
+    numberOfRows: number,
+    numberOfColumns: number,
+    numberOfBombs: number
+  ) => (): void => {
     let newCells = cells.slice();
     console.log(newCells[rowParam][colParam]);
     //  ------Starting the Game on Click if there No Time & Always Open Multiple Cells on First Click------
@@ -96,7 +103,11 @@ const App: React.FC = () => {
         let badStart = true;
         while (badStart) {
           console.log(badStart);
-          newCells = generateCells();
+          newCells = generateCells(
+            numberOfRows,
+            numberOfColumns,
+            numberOfBombs
+          );
           if (newCells[rowParam][colParam].value === CellValue.None) {
             badStart = false;
             break;
@@ -123,7 +134,13 @@ const App: React.FC = () => {
       return;
       //  ------Clicking on a Tile that is Empty------
     } else if (currentCell.value === CellValue.None) {
-      newCells = openMultipleCells(newCells, rowParam, colParam);
+      newCells = openMultipleCells(
+        newCells,
+        rowParam,
+        colParam,
+        numberOfRows,
+        numberOfColumns
+      );
       //  ------Clicking on a Tile that has a Number------
     } else {
       newCells[rowParam][colParam].state = CellState.Visible;
@@ -132,8 +149,8 @@ const App: React.FC = () => {
 
     //  ------Check if the Win Conditions Exist------
     let safeOpenCellsExist = false;
-    for (let row = 0; row < MAX_ROWS; row++) {
-      for (let col = 0; col < MAX_COLS; col++) {
+    for (let row = 0; row < numberOfRows; row++) {
+      for (let col = 0; col < numberOfColumns; col++) {
         const currentCell = newCells[row][col];
 
         if (
@@ -190,23 +207,39 @@ const App: React.FC = () => {
     }
   };
 
-  const handleFaceClick = (): void => {
+  const handleFaceClick = (
+    numberOfRows: number,
+    numberOfColumns: number,
+    numberOfBombs: number
+  ): void => {
     setLive(false);
     setTime(0);
-    setBombCounter(NO_OF_BOMBS);
-    setCells(generateCells());
+    setBombCounter(numberOfBombs);
+    setCells(generateCells(numberOfRows, numberOfColumns, numberOfBombs));
     setHasLost(false);
     setHasWon(false);
   };
 
-  const renderCells = (): React.ReactNode => {
+  const renderCells = (
+    numberOfRows: number,
+    numberOfColumns: number,
+    numberOfBombs: number
+  ): React.ReactNode => {
     return cells.map((row, rowIndex) =>
       row.map((cell, colIndex) => (
         <Button
           key={`${rowIndex}-${colIndex}`}
           state={cell.state}
           value={cell.value}
-          onClick={handleCellClick}
+          onClick={() =>
+            handleCellClick(
+              rowIndex,
+              colIndex,
+              numberOfRows,
+              numberOfColumns,
+              numberOfBombs
+            )
+          }
           onContext={handleCellContext}
           red={cell.red}
           row={rowIndex}
@@ -237,7 +270,10 @@ const App: React.FC = () => {
       <div className="App">
         <div className="Header">
           <NumberDisplay value={bombCounter} />
-          <div className="Face" onClick={handleFaceClick}>
+          <div
+            className="Face"
+            onClick={() => handleFaceClick(totalRows, totalColumns, totalBombs)}
+          >
             <span role="img" aria-label="face">
               {face}
             </span>
@@ -246,13 +282,13 @@ const App: React.FC = () => {
         </div>
         <div
           className="Body"
-          style={{
-            display: "grid",
-            gridTemplateColumns: `${variable}`,
-            gridTemplateRows: "1fr",
-          }}
+          // style={{
+          //   display: "grid",
+          //   gridTemplateColumns: `1fr`,
+          //   gridTemplateRows: "1fr",
+          // }}
         >
-          {renderCells()}
+          {renderCells(totalRows, totalColumns, totalBombs)}
         </div>
       </div>
     </div>
