@@ -19,8 +19,26 @@
     @include borders(#7b7b7b, white);
     margin-top: 16px;
     display: grid;
-    grid-template-rows: repeat(19, 1fr);
-    grid-template-columns: repeat(19, 1fr);
+
+    &.easy {
+        grid-template-rows: repeat(9, 1fr);
+        grid-template-columns: repeat(9, 1fr);
+    }
+
+    &.intermediate {
+        grid-template-rows: repeat(14, 1fr);
+        grid-template-columns: repeat(16, 1fr);
+    }
+
+    &.hard {
+        grid-template-rows: repeat(18, 1fr);
+        grid-template-columns: repeat(24, 1fr);
+    }
+
+    &.expert {
+        grid-template-rows: repeat(16, 1fr);
+        grid-template-columns: repeat(30, 1fr);
+    }
 }
 
 .Face {
