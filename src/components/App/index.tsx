@@ -32,11 +32,15 @@ const App: React.FC = () => {
   // Inside of a useEffect, that waits for changes in # of rows, cols, and bombs, create the logic to produces and sets the required style variable !!! Could not get to work, had to set a className with the difficulty setting
 
   //  ------ In Difficulty Settings ------
-  //inside of the DifficultySetting component create settings for easy medium hard expert and custom (checkboxes)
-  // when custom setting is selected open three inputs for the user to enter # of cols, rows, & bombs
-  // do not allow for the number of bombs to be greater than 80% of total tiles (cols*rows*.8)
-  // if total bombs > than allowed tell the user "The max amount of bombs is " + cols*rows*.8
+  //inside of the DifficultySetting component create settings for easy medium hard expert and custom (checkboxes) **!!completed with buttons and no custom input
 
+  // //////------------Ice Box---------Need to Find Way to Set CSS/SCSS to Custom Inputs---/////////////
+  // when custom setting is selected open three inputs for the user to enter # of cols, rows, & bombs //
+  // do not allow for the number of bombs to be greater than 80% of total tiles (cols*rows*.8)        //
+  // if total bombs > than allowed tell the user "The max amount of bombs is " + cols*rows*.8         //
+  //--------------------------------------------------------------------------------------------------//
+
+  //  ------When changing Difficulty Settings Adjust the Game Board and Bomb Count------
   useEffect(() => {
     switch (difficulty) {
       case "easy":
@@ -65,6 +69,7 @@ const App: React.FC = () => {
     }
   }, [difficulty]);
 
+  //  ------When Changing Difficulty Settings Reset the Game------
   useEffect(() => {
     setCells(generateCells(totalRows, totalColumns, totalBombs));
     setBombCounter(totalBombs);
@@ -77,7 +82,6 @@ const App: React.FC = () => {
   useEffect(() => {
     const handleMouseDown = (e: any): void => {
       const { className } = e.target;
-      console.log(hasLost);
       if (hasWon || hasLost) return;
       if (className.includes("Button") && !className.includes("visible")) {
         setFace(Face.Oh);
@@ -96,7 +100,7 @@ const App: React.FC = () => {
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, []);
+  }, [hasLost, hasWon]);
 
   useEffect(() => {
     if (live && time < 999) {
@@ -109,7 +113,6 @@ const App: React.FC = () => {
   }, [live, time]);
 
   useEffect(() => {
-    console.log(hasLost);
     if (hasLost) {
       setFace(Face.Lost);
       setLive(false);
