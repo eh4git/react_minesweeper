@@ -9,12 +9,16 @@ const DifficultySettings: React.FC<DifficultySettingsProps> = ({
   difficulty,
   setDifficulty,
 }) => {
-  const difficultyLevels = ["easy", "intermediate", "hard", "expert"];
+  const difficultyLevels = ["easy", "intermediate", "hard", "expert", "custom"];
   return (
-    <div className={`DifficultySettings`}>
-      {difficultyLevels.map((item) => (
-        <button key={item} onClick={() => setDifficulty(item)}>
-          {item}
+    <div className="difficultySettings">
+      {difficultyLevels.map((setting) => (
+        <button
+          key={setting}
+          onClick={() => setDifficulty(setting)}
+          className="settingBtn"
+        >
+          {setting}
         </button>
       ))}
     </div>

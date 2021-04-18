@@ -39,6 +39,10 @@
         grid-template-rows: repeat(16, 1fr);
         grid-template-columns: repeat(30, 1fr);
     }
+    &.custom {
+        grid-template-rows: repeat(16, 1fr);
+        grid-template-columns: repeat(30, 1fr);
+    }
 }
 
 .Face {

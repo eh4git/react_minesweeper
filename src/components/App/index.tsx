@@ -5,7 +5,7 @@ import DifficultySettings from "../DifficultySettings";
 import { generateCells, openMultipleCells } from "../../utils";
 import { Cell, CellState, CellValue, Face } from "../../types";
 import "./App.scss";
-
+const { REACT_APP_MY_ENV } = process.env;
 const App: React.FC = () => {
   const [totalRows, setTotalRows] = useState(18);
   const [totalColumns, setTotalColumns] = useState(24);
@@ -19,6 +19,9 @@ const App: React.FC = () => {
   const [hasWon, setHasWon] = useState(false);
   const [cells, setCells] = useState<Cell[][]>(
     generateCells(totalRows, totalColumns, totalBombs)
+  );
+  const [gameBoardStyle, setGameBoardStyle] = useState(
+    document.documentElement.getElementsByClassName("custom")
   );
 
   //  ------ In this file ------
@@ -62,6 +65,12 @@ const App: React.FC = () => {
         setTotalRows(16);
         setTotalColumns(30);
         setTotalBombs(99);
+        break;
+      case "custom":
+        setTotalRows(16);
+        setTotalColumns(30);
+        setTotalBombs(99);
+        console.log(REACT_APP_MY_ENV);
         break;
       default:
         alert("incorrect difficulty value");
@@ -325,6 +334,7 @@ const App: React.FC = () => {
           <NumberDisplay value={time} />
         </div>
         <div
+          id="Body"
           className={`Body ${difficulty}`}
           // style={{
           //   display: "grid",

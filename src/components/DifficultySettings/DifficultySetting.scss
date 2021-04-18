@@ -1,4 +1,9 @@
-.DifficultySetting {
+.difficultySettings {
     display: flex;
     justify-content: space-evenly;
+    position: absolute;
+    right: 1%;
+}
+.settingBtn {
+    text-transform: capitalize;
 }
