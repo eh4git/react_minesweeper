@@ -11,11 +11,11 @@
   * [Profile Picture](#Profile_Picture)
   * [Github Email](#Github_Email)
 ### Description
-Classic game of Minesweeper with all of the original functionality plus some UI improvements. Built in React.js with TypeScript, all styling is done in SCSS. More features are currently in the works.
+Classic game of Minesweeper with all of the original functionality plus some UI improvements. Built in React.js with TypeScript, all styling is done using SASS. More features are currently in the works.
 ### Usage
 npm install<br>
 npm start
-### Licence
+### License
 This project uses the following license(s):<br>
 None
 ### Contributions
