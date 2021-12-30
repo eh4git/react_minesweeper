@@ -1,4 +1,4 @@
-## React_Profile
+## React_Minesweeper
 ![GitHub Badge](https://img.shields.io/badge/License-None-blue.svg)
 ### Table of Contents
 * [Description](#Description)
@@ -16,7 +16,7 @@ Classic game of Minesweeper with all of the original functionality plus some UI 
 npm install<br>
 npm start
 ### Licence
-This project uses the following licence(s):<br>
+This project uses the following license(s):<br>
 None
 ### Contributions
 Please feel free to contribute by providing suggestions or feedback. Any contributions are greatly appreciated.<br>
