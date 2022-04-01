@@ -23,7 +23,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   const renderContent = (): React.ReactNode => {
     if (state === CellState.Visible) {
-      if (value == CellValue.Bomb) {
+      if (value === CellValue.Bomb) {
         return (
           <span role="img" aria-label="bomb">
             💣

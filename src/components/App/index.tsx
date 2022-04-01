@@ -20,9 +20,9 @@ const App: React.FC = () => {
   const [cells, setCells] = useState<Cell[][]>(
     generateCells(totalRows, totalColumns, totalBombs)
   );
-  const [gameBoardStyle, setGameBoardStyle] = useState(
-    document.documentElement.getElementsByClassName("custom")
-  );
+  // const [gameBoardStyle, setGameBoardStyle] = useState(
+  //   document.documentElement.getElementsByClassName("custom")
+  // );
 
   //  ------ In this file ------
   //Make a variable that holds the value of the current difficulty **
