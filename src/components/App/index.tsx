@@ -90,10 +90,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const handleMouseDown = (e: any): void => {
+      console.log(e)
+      const { button } = e
       const { className } = e.target;
+
       if (hasWon || hasLost) return;
       if (className.includes("Button") && !className.includes("visible")) {
-        setFace(Face.Oh);
+        button === 0 && setFace(Face.Oh);
       }
     };
 
